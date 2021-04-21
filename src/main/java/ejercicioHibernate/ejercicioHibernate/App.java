@@ -46,6 +46,8 @@ public class App {
 			switch (opcion) {
 			case 1:
 				System.out.println("Introduce un numero para insertar un empleado");
+				Empleado e= new Empleado(2,"dani","perez","perez","zamora","15-06-20","Calle argentina","666869935","Informatico",4);
+				EmpleadoDAO.inserEmpleado(session, 2, e);
 				break;
 				
 			case 2:
