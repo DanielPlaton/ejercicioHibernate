@@ -16,9 +16,9 @@ public  class MyLogger {
 	public static void createLogger() {
 		
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		String ruta = "C:\\Users\\Daniel\\Desktop\\pruebaProgramacion\\pruebaProgramacion\\src\\resources\\log4j.properties";
+		String ruta = "log4j.properties";
 		URL url = loader.getResource(ruta);
-		PropertyConfigurator.configure(ruta);
+		PropertyConfigurator.configure(url);
 
 	}
 	
