@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
-
-
+import org.hibernate.Transaction;
 
 import DAO.EmpleadoDAO;
 import controlador.MyLogger;
@@ -27,10 +26,12 @@ public class App {
 	{
 	
 		int opcion=0;
+		Transaction tx = null;
 		MyLogger.createLogger();
 
 		logger.info("Iniciando programa");
 		Session session = HibernateUtil.getSessionFactory().openSession();
+		tx = session.beginTransaction();
 
 		
 	
@@ -47,7 +48,18 @@ public class App {
 			case 1:
 				System.out.println("Introduce un numero para insertar un empleado");
 				Empleado e= new Empleado(2,"dani","perez","perez","zamora","15-06-20","Calle argentina","666869935","Informatico",4);
-				EmpleadoDAO.inserEmpleado(session, 2, e);
+				
+				
+					boolean existe = buscarId(e,session);
+					
+						System.out.println("El id ya existe en la base de datos añade otro");
+						int idnuevo= s.nextInt();
+						e.setCodigo(idnuevo);
+					
+						EmpleadoDAO.inserEmpleado(session, 2, e);
+						tx.commit();
+						
+				
 				break;
 				
 			case 2:
@@ -73,5 +85,19 @@ public class App {
 
 		} while (opcion != 6);
 
+	}
+
+
+	private static boolean buscarId(Empleado e, Session session) {
+		boolean existe=false;
+		List<Empleado> listaEmpleadosBuscar = EmpleadoDAO.getAllEmpleados(session);
+		for(int i=0;i<listaEmpleadosBuscar.size() ;i++) {
+			if(listaEmpleadosBuscar.get(i).getCodigo() == e.getCodigo()) {
+				existe= true;
+			}else {
+				existe= false;
+			}
+		}
+		return existe;
 	}
 }

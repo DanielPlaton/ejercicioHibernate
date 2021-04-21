@@ -28,5 +28,6 @@ public class EmpleadoDAO {
 	public static void inserEmpleado(Session s, int id, Empleado e) {
 
 		s.save(e);
+		
 	}
 }
