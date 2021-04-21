@@ -3,7 +3,7 @@
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 25-jun-2020 19:16:14 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
- <class name="modelo.Empleado" table="empresa">
+ <class name="modelo.Empleado" table="empleado">
   <id name="codigo" type="int">
    <column name="codigo"/>
   </id>

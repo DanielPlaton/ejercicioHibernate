@@ -1,15 +1,14 @@
 package ejercicioHibernate.ejercicioHibernate;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 import DAO.EmpleadoDAO;
-import utils.*;
-import modelo.*;
-
-
-
 import controlador.MyLogger;
+import modelo.Empleado;
+import utils.HibernateUtil;
 
 
 /**
@@ -28,10 +27,13 @@ public class App
     	logger.info("Iniciando programa");
     	Session session = HibernateUtil.getSessionFactory().openSession();
     	
-    	EmpleadoDAO a = new EmpleadoDAO();
+    	List<Empleado>listaEmpleados =  EmpleadoDAO.getAllEmpleados(session);
+    	for(int i = 0; i<listaEmpleados.size();i++) {
+    		System.out.println(listaEmpleados.get(i).toString());
+    	}
     	
     	
-    	
+    
     
         
     }
