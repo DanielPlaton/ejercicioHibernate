@@ -1,6 +1,9 @@
 package ejercicioHibernate.ejercicioHibernate;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import utils.*;
+
 
 import controlador.MyLogger;
 
@@ -18,6 +21,7 @@ public class App
     	MyLogger.createLogger();
     
     	logger.info("Iniciando programa");
+    	Session session = HibernateUtil.getSessionFactory().openSession();
     
         
     }
