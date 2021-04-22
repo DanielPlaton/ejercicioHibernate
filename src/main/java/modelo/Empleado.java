@@ -1,20 +1,41 @@
 package modelo;
 
 import java.io.Serializable;
+
 import java.sql.Date;
 
-public class Empleado implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "empleado")
+public class Empleado implements Serializable {
+	@Id
+	@Column(name = "codigo")
 	int codigo;
+	@Column(name = "nombre",nullable=false)
 	String nombre;
+	@Column(name = "apellido1",nullable=false)
 	String apellido1;
+	@Column(name = "apellido2",nullable=false)
 	String apellido2;
+	@Column(name = "lugar_nacimiento",nullable=false)
 	String lugarNacimiento;
+	@Column(name = "fecha_nacimiento",nullable=false)
 	String fechaNacimiento;
+	@Column(name = "direccion",nullable=false)
 	String direccion;
+	@Column(name = "telefono",nullable=false)
 	String telefono;
+	@Column(name = "puesto",nullable=false)
 	String puesto;
+	@Column(name = "cod_departamento",nullable=false)
 	int codDepartamento;
+	
 	public int getCodigo() {
 		return codigo;
 	}

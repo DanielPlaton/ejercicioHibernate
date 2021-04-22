@@ -7,7 +7,7 @@
   <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1/empresa</property>
   <property name="hibernate.connection.username">root</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-  <mapping resource="Departamento.hbm.xml"/>
-  <mapping resource="Empleado.hbm.xml"/>
+  <mapping class="modelo.Empleado"/>
+  <mapping class="modelo.Departamento"/>
  </session-factory>
 </hibernate-configuration>
