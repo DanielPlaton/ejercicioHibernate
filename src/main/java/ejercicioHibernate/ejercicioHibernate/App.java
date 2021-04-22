@@ -1,16 +1,19 @@
 package ejercicioHibernate.ejercicioHibernate;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import DAO.DepartamentoDAO;
 import DAO.EmpleadoDAO;
 import controlador.MyLogger;
 import modelo.Departamento;
 import modelo.Empleado;
+
 import utils.HibernateUtil;
 import java.util.Scanner;
 
@@ -37,7 +40,11 @@ public class App {
 		logger.info("Iniciando programa");
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		tx = session.beginTransaction();
-		Empleado e = new Empleado(2, "dani", "perez", "perez", "zamora", "15-06-20", "Calle argentina", "666869935",
+		
+		java.sql.Date date= new java.sql.Date(0);
+		
+		
+		Empleado e = new Empleado(2, "dani", "perez", "perez", "zamora", date, "Calle argentina", "666869935",
 				"Informatico", 3);
 		Departamento d = new Departamento(2, "Informatico", 35);
 
@@ -51,6 +58,7 @@ public class App {
 			System.out.println("7. Introduce un numero para borrar un departamento");
 			System.out.println("8. listar departamento");
 			System.out.println("9. listar empleados que pertenezcan a un departamento");
+			System.out.println("10. listar empleados que sean mayores a una fecha");
 			Scanner s = new Scanner(System.in);
 			opcion = s.nextInt();
 
@@ -61,7 +69,7 @@ public class App {
 				existe = buscarId(e, session);
 				EmpleadoDAO.getAllEmpleados(session);
 				if (existe) {
-					System.out.println("El codigo "+e.getCodigo() +" ya existe en la base de datos añade otro");
+					System.out.println("El codigo " + e.getCodigo() + " ya existe en la base de datos añade otro");
 					e.toString();
 					int idnuevo = s.nextInt();
 					e.setCodigo(idnuevo);
@@ -147,11 +155,11 @@ public class App {
 					if (existe == false && existeCod != -1) {
 						DepartamentoDAO.inserDepartamento(session, d);
 						tx.commit();
-						System.out.println("insertado departamento"+d.toString());
+						System.out.println("insertado departamento" + d.toString());
 						logger.info("insertado departamento " + d.toString());
 						salir = true;
 					}
-					
+
 				} while (salir == true);
 				break;
 
@@ -166,27 +174,41 @@ public class App {
 
 				DepartamentoDAO.borrarDepartamento(session, codigo3);
 				logger.info("Departamento borrado con codigo " + codigo3);
-				
+
 				break;
 			case 8:
 				listaDepartamentos = DepartamentoDAO.getAllDepartamentos(session);
 				listarDepartamentos(listaDepartamentos);
 				logger.info("Recuperada lista departamentos");
 				break;
-				
+
 			case 9:
 				System.out.println("listar empleados que pertenezcan a un departamento");
 				listaDepartamentos = DepartamentoDAO.getAllDepartamentos(session);
 				listarDepartamentos(listaDepartamentos);
-				
+
 				Scanner sn4 = new Scanner(System.in);
 				System.out.println("Introduce codigo del departamento por el que buscar sus empleados ");
 				int nombreDepartamento = sn4.nextInt();
-				List<Empleado> listaEmpleadosDepartamento=  EmpleadoDAO.getEmpleadoDeDepartamento(session, nombreDepartamento);
+				List<Empleado> listaEmpleadosDepartamento = EmpleadoDAO.getEmpleadoDeDepartamento(session,
+						nombreDepartamento);
 				listarEmpleados(listaEmpleadosDepartamento);
+
+				break;
+				
+			case 10:
+				System.out.println("listar empleados que pertenezcan a mayores a una fecha");
+				listaEmpleados = EmpleadoDAO.getAllEmpleados(session);
+				listarEmpleados(listaEmpleados);
+				Scanner sn5 = new Scanner(System.in);
+				System.out.println("Introduce una fecha en el formato aaaa.MM.dd");
+				int fecha = sn5.nextInt();				
+				
+				EmpleadoDAO.getEmpleadoFecha(session,fecha);
+				break;
 			}
 
-		} while (opcion != 10);
+		} while (opcion != 11);
 
 	}
 
