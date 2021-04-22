@@ -58,9 +58,9 @@ public class App {
 			case 1:
 				System.out.println("Insertando un empleado");
 				existe = buscarId(e, session);
-
+				EmpleadoDAO.getAllEmpleados(session);
 				if (existe) {
-					System.out.println("El codigo ya existe en la base de datos añade otro");
+					System.out.println("El codigo "+e.getCodigo() +" ya existe en la base de datos añade otro");
 					e.toString();
 					int idnuevo = s.nextInt();
 					e.setCodigo(idnuevo);
