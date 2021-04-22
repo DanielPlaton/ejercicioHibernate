@@ -6,8 +6,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import DAO.DepartamentoDAO;
 import DAO.EmpleadoDAO;
 import controlador.MyLogger;
+import modelo.Departamento;
 import modelo.Empleado;
 import utils.HibernateUtil;
 import java.util.Scanner;
@@ -26,7 +28,9 @@ public class App {
 
 		int opcion = 0;
 		boolean existe;
+		int existeCod;
 		List<Empleado> listaEmpleados;
+		List<Departamento> listaDepartamentos;
 		Transaction tx = null;
 		MyLogger.createLogger();
 
@@ -34,13 +38,18 @@ public class App {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		tx = session.beginTransaction();
 		Empleado e = new Empleado(2, "dani", "perez", "perez", "zamora", "15-06-20", "Calle argentina", "666869935",
-				"Informatico", 4);
+				"Informatico", 3);
+		Departamento d = new Departamento(2, "Informatico", 35);
 
 		do {
 			System.out.println("1. Introduce un numero para insertar un empleado");
 			System.out.println("2. Introduce un numero para modificar un empleado");
 			System.out.println("3. Introduce un numero para borrar un empleado");
 			System.out.println("4. listar empleados");
+			System.out.println("5. Introduce un numero para insertar un departamento");
+			System.out.println("6. Introduce un numero para modificar un departamento");
+			System.out.println("7. Introduce un numero para borrar un departamento");
+			System.out.println("8. listar departamento");
 			Scanner s = new Scanner(System.in);
 			opcion = s.nextInt();
 
@@ -57,9 +66,9 @@ public class App {
 					e.setCodigo(idnuevo);
 
 				}
-				if(!existe){
+				if (!existe) {
 
-					EmpleadoDAO.inserEmpleado(session, e.getCodigo(), e);
+					EmpleadoDAO.inserEmpleado(session, e);
 					tx.commit();
 					logger.info("Empleado insertado con codigo " + e.getCodigo());
 				}
@@ -81,19 +90,19 @@ public class App {
 				logger.info("Empleado modificado del codigo " + e.getCodigo());
 				tx.commit();
 				break;
-				
+
 			case 3:
 				System.out.println("Introduce un numero para borrar un empleado");
 				listaEmpleados = EmpleadoDAO.getAllEmpleados(session);
 				listarEmpleados(listaEmpleados);
-				
+
 				Scanner sn2 = new Scanner(System.in);
 				System.out.println("Introducce codigo del empleado a borrar ");
 				int codigo2 = sn2.nextInt();
-				
+
 				EmpleadoDAO.borrarEmpleado(session, codigo2);
-				logger.info("Empleado borrado con codigo "+codigo2);
-				
+				logger.info("Empleado borrado con codigo " + codigo2);
+
 				break;
 
 			case 4:
@@ -102,11 +111,70 @@ public class App {
 				listaEmpleados = EmpleadoDAO.getAllEmpleados(session);
 				listarEmpleados(listaEmpleados);
 				logger.info("Recuperada lista empleados");
-			
+
+				break;
+
+			case 5:
+				d.toString();
+				boolean salir = false;
+				do {
+					System.out.println("Insertando un Departamento");
+					existe = buscarIdDepartamento(d, session);
+
+					if (existe) {
+						listaDepartamentos = DepartamentoDAO.getAllDepartamentos(session);
+						listarDepartamentos(listaDepartamentos);
+						System.out.println("El codigo " + d.getCodigo() + " ya existe en la base de datos añade otro");
+						d.toString();
+						int idnuevo = s.nextInt();
+						d.setCodigo(idnuevo);
+						salir = false;
+
+					}
+
+					existeCod = existeCodEmpleado(d, session);
+					if (existeCod == -1) {
+						listaEmpleados = EmpleadoDAO.getAllEmpleados(session);
+						listarEmpleados(listaEmpleados);
+						System.out.println("El responsable " + d.getCodResponsable()
+								+ " no existe en la tabla empleados pon un codigo de empleado valido");
+						int idnuevo = s.nextInt();
+						d.setCodResponsable(idnuevo);
+						salir = false;
+					}
+
+					if (existe == false && existeCod != -1) {
+						DepartamentoDAO.inserDepartamento(session, d);
+						tx.commit();
+						System.out.println("insertado departamento"+d.toString());
+						logger.info("insertado departamento " + d.toString());
+						salir = true;
+					}
+					
+				} while (salir == true);
+				break;
+
+			case 7:
+				System.out.println("Introduce un numero para borrar un Departamento");
+				listaDepartamentos = DepartamentoDAO.getAllDepartamentos(session);
+				listarDepartamentos(listaDepartamentos);
+
+				Scanner sn3 = new Scanner(System.in);
+				System.out.println("Introducce codigo del departamento a borrar ");
+				int codigo3 = sn3.nextInt();
+
+				DepartamentoDAO.borrarDepartamento(session, codigo3);
+				logger.info("Departamento borrado con codigo " + codigo3);
+				
+				break;
+			case 8:
+				listaDepartamentos = DepartamentoDAO.getAllDepartamentos(session);
+				listarDepartamentos(listaDepartamentos);
+				logger.info("Recuperada lista departamentos");
 				break;
 			}
 
-		} while (opcion != 5);
+		} while (opcion != 9);
 
 	}
 
@@ -114,6 +182,15 @@ public class App {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < listaEmpleados.size(); i++) {
 			System.out.println(listaEmpleados.get(i).toString());
+
+		}
+
+	}
+
+	private static void listarDepartamentos(List<Departamento> listaDepartamentos) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < listaDepartamentos.size(); i++) {
+			System.out.println(listaDepartamentos.get(i).toString());
 
 		}
 
@@ -128,6 +205,34 @@ public class App {
 				break;
 			} else {
 				existe = false;
+			}
+		}
+		return existe;
+	}
+
+	private static boolean buscarIdDepartamento(Departamento d, Session session) {
+		boolean existe = false;
+		List<Departamento> listaDepartamentoBuscar = DepartamentoDAO.getAllDepartamentos(session);
+		for (int i = 0; i < listaDepartamentoBuscar.size(); i++) {
+			if (listaDepartamentoBuscar.get(i).getCodigo() == d.getCodigo()) {
+				existe = true;
+				break;
+			} else {
+				existe = false;
+			}
+		}
+		return existe;
+	}
+
+	private static int existeCodEmpleado(Departamento d, Session session) {
+		int existe = 0;
+		List<Empleado> listaEmpleadosBuscar = EmpleadoDAO.getAllEmpleados(session);
+		for (int i = 0; i < listaEmpleadosBuscar.size(); i++) {
+			if (listaEmpleadosBuscar.get(i).getCodigo() == d.getCodResponsable()) {
+				existe = listaEmpleadosBuscar.get(i).getCodigo();
+				break;
+			} else {
+				existe = -1;
 			}
 		}
 		return existe;
