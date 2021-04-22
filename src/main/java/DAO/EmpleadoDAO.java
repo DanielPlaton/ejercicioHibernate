@@ -30,4 +30,24 @@ public class EmpleadoDAO {
 		s.save(e);
 		
 	}
+	
+	public static void actualizarEmpleado(Session s, int id,String nombre) {
+		// s.get(Empleado.class, id);
+		
+		Empleado e = s.get(Empleado.class, id);
+		e.setNombre(nombre);
+		s.update(e);
+	
+
+	}
+	
+
+	public static void borrarEmpleado(Session s, int id) {
+		// s.get(Empleado.class, id);
+		Empleado e = s.get(Empleado.class, id);
+
+		s.delete(e);
+
+	}
+	
 }
