@@ -50,6 +50,7 @@ public class App {
 			System.out.println("6. Introduce un numero para modificar un departamento");
 			System.out.println("7. Introduce un numero para borrar un departamento");
 			System.out.println("8. listar departamento");
+			System.out.println("9. listar empleados que pertenezcan a un departamento");
 			Scanner s = new Scanner(System.in);
 			opcion = s.nextInt();
 
@@ -172,9 +173,20 @@ public class App {
 				listarDepartamentos(listaDepartamentos);
 				logger.info("Recuperada lista departamentos");
 				break;
+				
+			case 9:
+				System.out.println("listar empleados que pertenezcan a un departamento");
+				listaDepartamentos = DepartamentoDAO.getAllDepartamentos(session);
+				listarDepartamentos(listaDepartamentos);
+				
+				Scanner sn4 = new Scanner(System.in);
+				System.out.println("Introduce codigo del departamento por el que buscar sus empleados ");
+				int nombreDepartamento = sn4.nextInt();
+				List<Empleado> listaEmpleadosDepartamento=  EmpleadoDAO.getEmpleadoDeDepartamento(session, nombreDepartamento);
+				listarEmpleados(listaEmpleadosDepartamento);
 			}
 
-		} while (opcion != 9);
+		} while (opcion != 10);
 
 	}
 

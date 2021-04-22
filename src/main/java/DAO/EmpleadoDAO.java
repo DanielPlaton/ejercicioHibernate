@@ -17,11 +17,16 @@ public class EmpleadoDAO {
 		return listaEmpleados;
 	}
 
-	public static Empleado getEmpleado(Session s, int id) {
+	public static List<Empleado> getEmpleadoDeDepartamento(Session s, int departamento) {
 		// s.get(Empleado.class, id);
-		Empleado e = s.get(Empleado.class, id);
+		
+		String hQuery = "from Empleado e where e.codDepartamento = :departamento";
 
-		return e;
+		List<Empleado> listaEmpleados =  s.createQuery(hQuery, Empleado.class)
+				.setParameter("departamento", departamento)
+				.list();
+
+		return listaEmpleados;
 
 	}
 
